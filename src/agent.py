@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Optional
 import aiohttp
 import pandas as pd
+import orjson
 from fastapi import HTTPException
 from langchain.chains import RetrievalQA
 from langchain.docstore.document import Document
@@ -97,6 +98,7 @@ class CdpAgentClassifier:
         self.thread_pool = ThreadPoolExecutor(max_workers=max_workers)
         self.agent_executor = None
         self._lock = asyncio.Lock()
+        self.file_path = "./data/wallet.json"
 
     async def initialize(self):
         async with self._lock:
@@ -129,16 +131,33 @@ class CdpAgentClassifier:
             ),
         )
 
-    async def process_query(self, query: str):
+    async def process_query(self, query: str, user_address: str):
         if self.agent_executor is None:
             raise RuntimeError("Agent not initialized. Please call initialize() first.")
             
         config = {"configurable": {"thread_id": "Risk Assessment API"}}
         
-        return await asyncio.get_event_loop().run_in_executor(
+        response =  await asyncio.get_event_loop().run_in_executor(
             self.thread_pool,
             lambda: self.agent_executor.invoke(
                 {"messages": [HumanMessage(content=query)]},
                 config=config
             )["messages"][-1].content
         )
+        
+        self._update_risk_profile(self._parse_risk(response), user_address)
+        
+        return response
+    
+    def _update_risk_profile(self, risk_profile: str, user_address: str):
+        with open(self.file_path, 'rb') as file:
+            wallet_data = orjson.loads(file.read())
+            
+        for entry in wallet_data:
+            if entry["user_address"] == user_address:
+                entry["risk_profile"] = risk_profile
+                with open(self.file_path, 'wb') as file:
+                    file.write(orjson.dumps(wallet_data, option=orjson.OPT_INDENT_2))
+                
+    def _parse_risk(self, response):
+        return orjson.loads(response).get("risk")

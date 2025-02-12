@@ -40,13 +40,13 @@ async def startup_event():
 
 
 @app.post("/generate-risk-profile")
-async def assess_risk(data: str = Body(..., embed=True)):
+async def assess_risk(request: QueryRequestClassifier):
     """
     Endpoint to assess risk profile based on user responses.
     Returns a JSON with risk assessment level.
     """
     try:
-        response = await cdp_agent_classifier.process_query(query=data)
+        response = await cdp_agent_classifier.process_query(query=request.data, user_address=request.user_address)
         parsed_response = json.loads(response)
         
         return JSONResponse(content=parsed_response)
