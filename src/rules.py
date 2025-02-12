@@ -29,15 +29,15 @@ class AgentWalletSync:
     def _get_token_ca(self, asset_id):
         match asset_id:
             case "usdc":
-                return "0x8fD29CC673C16d0466D5eA0250dC3d040554F4a3"
+                return "0x0E8Ac3cc5183A243FcbA007136135A14831fDA99"
             case "uni":
-                return "0xbb072b81D265D4F574b324Cea7469C9369281Da0"
+                return "0x1eaC9BB63f8673906dBb75874356E33Ab7d5D780"
             case "weth":
-                return "0x1133c55280Be106f985622bF56dcc7Fb3C3D6Ee0"
+                return "0xD1d25fc5faC3cd5EE2daFE6292C5DFC16057D4d1"
             case "usdt":
-                return "0xaa7DcAae6C6e579A326B860572Da90A149Dc1266"
+                return "0xbF1876d7643a1d7DA52C7B8a67e7D86aeeAA12A6"
             case "dai":
-                return "0x9A410E847e6161c96C72a7C40beaDAD5c86ea6aE"
+                return "0x134C06B12eA6b1c7419a08085E0de6bDA9A16dA2"
     
     def swap(self, user_address, spender, token_in, token_out, amount):
         approve_abi = self._read_abi("./abi/MockToken.json")
@@ -55,7 +55,7 @@ class AgentWalletSync:
         abi = self._read_abi("./abi/OptiFinance.json")
         
         invocation = wallet.invoke_contract(
-            contract_address="0xc34aE34Da7051ac971638d3F09FDF516Ea48C5c9",
+            contract_address="0x9F7b08e2365BFf594C4227752741Cb696B9b6E71",
             abi=abi,
             method="swap",
             args={"tokenIn": token_in, "tokenOut": token_out, "amountIn": str(int(amount))}
@@ -148,7 +148,7 @@ def handle_low_risk(user_address, user_staked):
         try:
             agent = AgentWalletSync()
             agent.unstake(user_address, from_protocol)
-            agent.swap(user_address, spender="0xc34aE34Da7051ac971638d3F09FDF516Ea48C5c9", token_in=token_ca, token_out=protocol[2], amount=amount)
+            agent.swap(user_address, spender="0x9F7b08e2365BFf594C4227752741Cb696B9b6E71", token_in=token_ca, token_out=protocol[2], amount=amount)
             agent.stake(user_address, protocol[2], protocol[0], amount)
             print("success")
         except Exception as e:
@@ -168,7 +168,7 @@ def handle_high_risk(user_address, user_staked):
         try:
             agent = AgentWalletSync()
             agent.unstake(user_address, from_protocol)
-            agent.swap(user_address, spender="0xc34aE34Da7051ac971638d3F09FDF516Ea48C5c9", token_in=token_ca, token_out=protocol[2], amount=amount)
+            agent.swap(user_address, spender="0x9F7b08e2365BFf594C4227752741Cb696B9b6E71", token_in=token_ca, token_out=protocol[2], amount=amount)
             agent.stake(user_address, protocol[2], protocol[0], amount)
             print("success")
         except Exception as e:
