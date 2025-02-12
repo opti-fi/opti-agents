@@ -31,7 +31,7 @@ def get_data_staked(user_address):
     rpc_url = "https://api.developer.coinbase.com/rpc/v1/base-sepolia/vIyOU1PrjnUku5b1y2FGu416eItcu3KH"
     w3 = Web3(Web3.HTTPProvider(rpc_url))
 
-    result = requests.get("https://opti-api.vercel.app/staking")
+    result = requests.get("https://opti-backend.vercel.app/staking")
     response = result.json()
     address_protocol = [item['addressStaking'] for item in response]
 

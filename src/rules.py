@@ -176,7 +176,7 @@ def handle_high_risk(user_address, user_staked):
 
 
 def get_apy(filter):
-    result = requests.get('https://opti-api.vercel.app/staking')
+    result = requests.get('https://opti-backend.vercel.app/staking')
     response = result.json()
     
     if filter == 'highest':

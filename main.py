@@ -26,7 +26,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-URL_KNOWLEDGE = "https://opti-api.vercel.app/staking"
+URL_KNOWLEDGE = "https://opti-backend.vercel.app/staking"
 
 cdp_agent_classifier = CdpAgentClassifier()
 cdp_agent = CdpAgent(url=URL_KNOWLEDGE)
@@ -91,6 +91,7 @@ async def create_wallet(request: QueryUserWallet):
     await agent_wallet.create_wallet(
             user_address=request.user_address
         )
+    txhash = await agent_wallet._fund_wallet(request.user_address)
     response = {"address": await agent_wallet._check_address(request.user_address)}
     
     return JSONResponse(content=response)
