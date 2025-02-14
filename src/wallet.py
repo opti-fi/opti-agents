@@ -84,13 +84,13 @@ class AgentWallet:
         match protocol:
             case "uniswap":
                 return "0xa42A86906D3FDfFE7ccc1a4E143e5Ddd8dF0Cf83"
-            case "compound":
+            case "compoundv3":
                 return "0xD1b1954896009800dF01b197A6E8E1d98FF44ae8"
             case "usdxmoney":
                 return "0x6c36eD76d3FF0A7C0309aef473052b487895Fadf"
-            case "stargate":
+            case "stargatev3":
                 return "0x0CAf83Ef2BA9242F174FCE98E30B9ceba299aaa3"
-            case "aave":
+            case "aavev3":
                 return "0x5dC10711C60dd5174306aEC6Fb1c78b895C9fA5A"
     
     async def mint(self, user_address, asset_id, amount):
